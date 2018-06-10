@@ -1,0 +1,29 @@
+# coding: utf-8
+#!/usr/bin/env python
+
+import socket,sys
+HOST = '192.168.231.15'
+PORT = 4000
+msgServeur=""
+
+try:
+	sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+	sock.connect((HOST, PORT))
+except socket.error:
+	print("La liaison internet a echoué")
+	sys.exit()
+
+print ("Connexion établie avec le serveur.")
+
+fichier = open("/var/www/new/longitude.txt","w")
+fichier.write(msgServeur.decode())
+
+while 1:
+	sock.send(b"O")
+	msgServeur = sock.recv(1024)
+	print ( msgServeur.decode())
+	fichier.write(msgServeur.decode())
+
+print ("Connexion interrompue.")
+fichier.close()
+sock.close()
